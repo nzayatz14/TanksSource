@@ -58,13 +58,23 @@ AMyHUD::AMyHUD(const class FObjectInitializer& PCIP) : Super(PCIP)
 }
 
 
-// Draw Dialogs
+/**
+ Function to Draw the Dialogs
+ 
+ - parameters:void
+ - returns: void
+*/
 void AMyHUD::DrawHUD_DrawDialogs()
 {
     DrawMainMenuButtons();
     if (ConfirmDialogOpen) DrawConfirm();
 }
-
+/**
+ Function to draw the confirm menu
+ 
+ - parameters: void
+ - returns: void
+*/
 void AMyHUD::DrawConfirm()
 {
     //Blue rect with alpha 50%
@@ -74,7 +84,12 @@ void AMyHUD::DrawConfirm()
     DrawConfirmButtons();
 }
 
-//Buttons
+/**
+ Function to draw the main menu, Restart and Exit buttons
+ 
+ - parameters: void
+ - reutrns: void
+*/
 void AMyHUD::DrawMainMenuButtons()
 {
     //Start Point
@@ -133,6 +148,12 @@ void AMyHUD::DrawMainMenuButtons()
         ButtonsMain.Add(newButton);
     }
 }
+/**
+ Function to draw the Confirm buttons, the YES and NO buttons
+ 
+ - parameters: void
+ - returns: void
+ */
 void AMyHUD::DrawConfirmButtons()
 {
     float xStart = Canvas->SizeX / 2 - 100;
@@ -191,7 +212,12 @@ void AMyHUD::DrawConfirmButtons()
         ButtonsConfirm.Add(newButton);
     }
 }
-
+/**
+ Function to draw the healthbar for the 
+ 
+ - parameters: void
+ - returns: void
+*/
 void AMyHUD::DrawHealthBar()
 {
     DrawHUDText(
@@ -208,16 +234,14 @@ void AMyHUD::DrawHealthBar()
         DrawHUDRect( y, 100, healthWidth, 50, FLinearColor(0,1,0,1));
         y+=healthWidth;
     }
-    
-    
-    //DrawHUDRect(100, 100, 50, 50, FLinearColor(0, 1, 0, 1));
-    //DrawHUDRect(150, 100, 50, 50, FLinearColor(0, 1, 0, 1));
-    //DrawHUDRect(200, 100, 50, 50, FLinearColor(0, 1, 0, 1));
-    //DrawHUDRect(250, 100, 50, 50, FLinearColor(0, 1, 0, 1));
-    //DrawHUDRect(300, 100, 50, 50, FLinearColor(0, 1, 0, 1));
 }
 
-// Is cursor in Buttons
+/**
+ Function to check the information in the button struct
+ 
+ - parameters ButtonArray: A struct that holds the information about the button
+ - returns: an integer, that is the type of the current button.
+*/
 int32 AMyHUD::CheckCursorInButton(const TArray<FHUDButtonStruct>& ButtonArray)
 {
     for (int32 b = 0; b < ButtonArray.Num(); b++)
@@ -247,7 +271,12 @@ int32 AMyHUD::CheckCursorInButton(const TArray<FHUDButtonStruct>& ButtonArray)
     return -1;
 }
 
-//Check Confirm
+/**
+ Function to check the cursor location to see if the cursor is in the confirm buttons
+ 
+ - parameters: void
+ - returns: void
+*/
 void AMyHUD::CheckCursorInButtonsConfirm()
 {
     //Check Confirm Buttons
@@ -265,8 +294,12 @@ void AMyHUD::CheckCursorInButtonsConfirm()
         return;
     }
 }
-
-//Check Buttons
+/**
+ Function to check to see if the cursor is in the main buttons
+ 
+ - parmeter: void
+ - returns: void
+*/
 void AMyHUD::CheckCursorInButtonsMain()
 {
     //Check Confirm Buttons
@@ -283,6 +316,12 @@ void AMyHUD::CheckCursorInButtonsMain()
         return;
     }
 }
+/**
+ Function to check to see if cursor is in any of the buttons.
+ 
+ - paramters: void
+ - returns: void
+ */
 void AMyHUD::DrawHUD_CheckCursorInButtons()
 {
     if (ConfirmDialogOpen)
@@ -294,7 +333,13 @@ void AMyHUD::DrawHUD_CheckCursorInButtons()
     
     CheckCursorInButtonsMain();
 }
-
+/**
+ Function to Draw the tool tip which provides information about what clicking button does.
+ 
+ - Parameters: void
+ - reuturns: void
+ 
+ */
 void AMyHUD::DrawToolTip()
 {
     float xStart = MouseLocation.X + 150;
@@ -339,14 +384,25 @@ void AMyHUD::DrawToolTip()
              false
              );
 }
+/**
+ Function reset the state of the buttons
+ 
+ - parameters:void
+ - returns:void
 
+*/
 void AMyHUD::DrawHUD_Reset()
 {
     ActiveButton_Type = -1;
     ActiveButton_Tip = "";
     CursorHoveringInButton = false;
 }
-
+/**
+ Function to draw the HUD
+ 
+ - parameters: void
+ - returns:void
+*/
 void AMyHUD::DrawHUD()
 {
     ATankCharacter *MyTank = Cast<ATankCharacter>(UGameplayStatics::GetPlayerPawn(this,0));
@@ -406,23 +462,9 @@ void AMyHUD::DrawHUD()
     //No Canvas?
     if (!Canvas) return;
     
-    //Reset States
-    //DrawHUD_Reset();
-    
-    //Get New Mouse Position
-    //ThePC->GetMousePosition(MouseLocation.X, MouseLocation.Y);
-    
-    //Cursor In Buttons
-    //DrawHUD_CheckCursorInButtons();
-    
-    //Draw Dialogs
-    //DrawHUD_DrawDialogs();
-    
     DrawHealthBar();
     
     DrawRadar();
-    
-    //if (ActiveButton_Tip != "") DrawToolTip();
     
     if (MyTank->lost && !won){
         loss = true;
@@ -432,11 +474,12 @@ void AMyHUD::DrawHUD()
         checkWin();
     }
 }
-
-
-//  Radar things
-//  DrawRadar()
-//      Draw the circle the radar will sit on. Call DrawOtherPlayers and DrawRadarSweep.
+/**
+ Function to draw the circle that the radar will sit on. Function will call DrawOtherPlayers, and DrawRadarSweep
+ 
+ - parameter:void
+ - returns:void
+ */
 void AMyHUD::DrawRadar()
 {
     //  3 == detail of the circle
@@ -457,13 +500,14 @@ void AMyHUD::DrawRadar()
     DrawOtherPlayers(radar_scale, radar_center, radar_range);
     DrawRadarSweep(radar_scale, radar_center);
 }
-
-
-//  DrawOtherPlayers()
-//      radar_scale is in screen pixels
-//      radar_center is screen coordinate
-//      radar_range is world coordinate
-//  Draw dots for each nearby "tank"
+/**
+ Function to draw dots for each nearby tank
+ 
+ - parameter radar_scale: scale in screen pixels
+ - parameter radar_center: the coordinates for the center, a screen coordinate
+ - parameter radar_range: how far to look for tanks, a world coordinate
+ - returns:void
+ */
 void AMyHUD::DrawOtherPlayers(float radar_scale, FVector2D radar_center, float radar_range)
 {
     if(!GetOwningPawn())
@@ -513,11 +557,13 @@ void AMyHUD::DrawOtherPlayers(float radar_scale, FVector2D radar_center, float r
         }
     }
 }
-//  DrawRadarSweep()
-//      radar_scale is in screen pixels
-//      radar_center is screen coordinate
-//      radar_range is world coordinate
-//  Draw a line that spins around the center (like a clock)
+/** 
+ Function to draw the radar sweep (line that spins around the center, like a clock)
+ 
+ - parameter radar_scale: scale , in screen pixels
+ - parameter radar_center: the coordinates for the center of radar, is screen coordinate
+ - returns: void
+ */
 void AMyHUD::DrawRadarSweep(float radar_scale, FVector2D radar_center)
 {
     static FVector2D sweeper = FVector2D(0,1) * radar_scale;
@@ -531,10 +577,15 @@ void AMyHUD::DrawRadarSweep(float radar_scale, FVector2D radar_center)
              1
              );
 }
-/*  DrawLine(FVector Start, FVector End, FLinearColor TheColor, float Thick)
- *   Draws a line on the screen from Start to End
- *   The line will be color TheColor, ie. FColor::Red
- *   the float is the thickness of the line (in pixels?)
+/**
+ Function called to draw a line on the screen
+ 
+ - parameter Start: the start location of the line you will be drawing
+ - parameter End: the end location of the line
+ - parameter Color: the color of the line
+ - paramter Thick: The thickness of the line
+ - returns: void
+ 
  */
 void AMyHUD::DrawLine(FVector Start, FVector End, FLinearColor TheColor, float Thick)
 {
@@ -543,8 +594,13 @@ void AMyHUD::DrawLine(FVector Start, FVector End, FLinearColor TheColor, float T
     NewLine.LineThickness = Thick;
     Canvas->DrawItem(NewLine);
 }
-//  RotateVector(FVector2D, float)
-//      Return this vector rotated by these degrees
+/**
+ Function returns a vector rotated by a certain number of degrees
+ 
+ - parameter input: The vector to be rotated
+ - parameter delta: The number of degrees to be rotated by
+ - returns: FVector2D the rotated vector.
+ */
 FVector2D AMyHUD::RotateVector(FVector2D input, float delta)
 {
     float newX, newY;
@@ -571,17 +627,4 @@ void AMyHUD::checkWin(){
     }
     
     won = current;
-}
-
-/**
- Function that prints the current controls that are used in the game
-
- -parameter void:
- -returns: void
-*/
-void AMyHUD::DrawInstructions(){
-     FVector2D ScreenSize = FVector2D(Canvas->SizeX, Canvas->SizeY);
-    FVector2D WinSize;
-    GetTextSize(TEXT("Controls to Move: WASD to change "), WinSize.X, WinSize.Y, VerdanaFont);
-    DrawText(TEXT("YAY!! YOU WON!! :D "), FColor::Red, (ScreenSize.X - WinSize.X) / 2.0f, (ScreenSize.Y - WinSize.Y) / 2.0f, VerdanaFont);
 }
