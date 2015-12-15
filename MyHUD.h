@@ -120,6 +120,7 @@ public:
     static const FLinearColor LC_Red;
     static const FLinearColor LC_Yellow;
     
+    //DrawRectangle
     FORCEINLINE void DrawHUDRect(
                                  float X, float Y,
                                  float Width, float Height,
